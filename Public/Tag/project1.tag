@@ -4,7 +4,7 @@
   </div>
 
 	<div class="projectDisplay">
-    <p>We have developed <span>{projectNum}</span> projects for makerspace education</p>
+    <p>I have developed <span>{projectNum}</span> projects for makerspace education</p>
 		<input type="text" ref="urlEl" placeholder="Enter pic url">
 		<input type="text" ref="captionEl" placeholder="Enter caption">
 		<input type="text" ref="introEl" placeholder="Enter introduction url">
@@ -21,34 +21,8 @@
 
 	var projectsRef = rootRef.child('myProjects');
 
-		this.myProjects = [
-		{
-			url: "./Image/TurtleArt code.png",
-			caption: "TurtleArt-Draw with Coding" ,
-		  introduction:"https://medium.com/@elainepan_25203/creating-computational-art-with-turtleart-a421ebccc935?source=friends_link&sk=292827a26ef128b7b9ecc615da18c90a"},
-		{
-			url: "./Image/Scratch-Name Animation.png",
-			caption:"Scratch-Coded Animation",
-		introduction:"https://scratch.mit.edu/projects/286724419/" },
-		{
-			url: "./Image/Scratch-Story Telling.png",
-			caption: "Scratch-Creative Story Telling with Coding",
-		introduction:"https://scratch.mit.edu/projects/286772452/"},
-		{
-			url: "./Image/Makey.png",
-			caption: "Makey Makey-Electronic Invention Kit",
-		 introduction:"https://medium.com/@elainepan_25203/coded-music-anything-can-be-an-instrument-be7de55dffa1?source=friends_link&sk=1970ed40e38ad56e079d2f28d8b610bd" },
-		{
-			url: "./Image/Coded Embroidery.jpeg",
-			caption: "Turtle Stitch-Coded Embroidery",
-			introduction:"https://medium.com/@elainepan_25203/turtlestitch-coded-embroidery-dc30b0258480?source=friends_link&sk=6fa57b528a5a6ffd2c034df09f291f64"
-		},
-		{
-			url: "./Image/3D-Beetle Blocks.jpg",
-			caption: "Beetle Blocks-Create 3D Model with Coding",
-		  introduction:"https://medium.com/@elainepan_25203/beetle-block-3d-modeling-5028ce894ad4?source=friends_link&sk=6f7e4b80baeb540efb698db91e867d93"},
-		];
-  console.log(this.myProjects.length);
+		this.myProjects = [];
+		console.log(this.myProjects.length);
 
     this.projectNum = this.myProjects.length;
 
@@ -76,7 +50,8 @@
 			var caption = this.refs.captionEl.value;
 			var newProject = { url: url, caption: caption,introduction:intro };
 			// We are adding a book object to the source of truth array.
-			this.myProjects.push(newProject);
+			// this.myProjects.push(newProject);
+			projectsRef.push(newProject);
 
 			// RESET INPUTS this.refs.urlEl.value = "";
       this.projectNum = this. myProjects.length;
@@ -85,12 +60,25 @@
 			this.refs.introEl.value = "";
 		};
 
-		 this.on ("updated",function(){
-		 this.projectNum = this. myProjects.length;
-			 // that.update();
-		 });
+		 // this.on("updated",function(){
+		 // this.projectNum = this.myProjects.length;
+			//  // that.update();
+		 // });
 
+		 projectsRef.on('value', function (snap) {
+       let rawdata = snap.val();
+       // console.log("rawdata", rawdata);
+       let tempData = [];
+       for (key in rawdata) {
+         tempData.push(rawdata[key]);
+       }
+       // console.log("myMemes", tag.myMemes);
+       tag.myProjects = tempData;
+			 tag.projectNum = tag.myProjects.length;
 
+       tag.update();
+       observable.trigger('updateMemes', tempData);
+     })
 	</script>
 
 	<style>
